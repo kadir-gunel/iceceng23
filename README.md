@@ -9,8 +9,10 @@ For data you can either download the provided embedding spaces or create your ow
 using BSON: @load
 using Random
 
-# @load "/path/to/FT-sentence-embeddings/" FT
-# @load "/path/to/sBert-sentence-embeddings/" sBert
+# @load "/path/to/FT_first_30k_sentences.bson" x
+# FT = x |> copy 
+# @load "/path/to/sBert_first_30k_sentences.bson" x
+# sBert = x |> copy
 
 # FT = rand(300, 30_000)
 # sBert = rand(768, 30_000)
