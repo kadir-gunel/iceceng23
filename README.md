@@ -47,7 +47,7 @@ function findAlignments(X, Y)
   # find the most appropriate neighbor by averaging top 10 samples
   src_idx = getindex(argmax(sim, dims=1))
   trg_idx = getindex(argmax(sim, dims=2))
-  # list of highest index for taget/ource
+  # list of highest index for source/target
   return src_idx, trg_idx 
 end
 ```
