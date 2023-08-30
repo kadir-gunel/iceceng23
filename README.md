@@ -21,6 +21,9 @@ using Random
 ## Appendix 1: Orthogonal Matrix Properties
 ### Property 1
 
+The property of the W rotation matrix is that, since it is orthogonal, its transpose (WT) can rotate sBert sentence embeddings towards FastText space. This operation can be used as a supervised dimensionality reduction operation.
+
+
 ```julia
 function mapOrthogonal(From, To)
   F = svd(From * To’) 
@@ -36,6 +39,8 @@ W_sbert = W' * FastText
 
 
 ### Property 2
+The property of the rotation matrix W comes from, again, its orthogonality. Summing any number of orthogonal matrices equals again another orthogonal matrix (WGlobal). Our experiments for rotation uses this property, since it gives better rotation results compared to single rotation matrix.
+
 ```julia
 function orthogonalProperty2(FastText, sBert)
   Ws = [] # hold every rotation matrix W
@@ -52,6 +57,9 @@ end
 ```
 
 ## Appendix 2: Alignment Procedure
+Since embedding dimensions of both models are different from each other, it is de-cided to use an alignment search function which can work on sample space.
+
+
 ```julia
 function findAlignments(X, Y)
   # X and Y have equal number of samples, their dimensions can be different 
