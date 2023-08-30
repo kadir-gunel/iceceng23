@@ -1,6 +1,22 @@
 # iceceng23
 Code samples in the Appendix part of *Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models* paper
 
+For data you can either download the provided embedding spaces or create your own random data : 
+[1] download the provided embedding spaces
+[2] create your own random data 
+
+```julia
+using BSON: @load
+using Random
+
+# @load "/path/to/FT-sentence-embeddings/" FT
+# @load "/path/to/sBert-sentence-embeddings/" sBert
+
+# FT = rand(300, 30_000)
+# sBert = rand(768, 30_000)
+
+```
+
 
 ## Appendix 1: Orthogonal Matrix Properties
 ### Property 1
