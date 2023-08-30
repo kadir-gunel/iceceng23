@@ -28,7 +28,7 @@ using Random
 ## Appendix 1: Orthogonal Matrix Properties
 ### Property 1
 
-The property of the W rotation matrix is that, since it is orthogonal, its transpose (WT) can rotate sBert sentence embeddings towards FastText space. This operation can be used as a supervised dimensionality reduction operation.
+The property of the W rotation matrix is that, since it is orthogonal, its transpose (W^T) can rotate sBert sentence embeddings towards FastText space. This operation can be used as a supervised dimensionality reduction operation.
 
 
 ```julia
