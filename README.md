@@ -1,7 +1,8 @@
 # iceceng23
 Code samples in the Appendix part of *Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models* paper
 
-For data you can either download the provided embedding spaces or create your own random data : 
+## Toy Data
+For data you can either: 
 1. download the provided embedding space
 2. create your own random data 
 
