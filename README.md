@@ -1,16 +1,24 @@
 # iceceng23
 Code samples in the Appendix part of *Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models* paper
 
+- The code given below is written in [Julia](https://julialang.org/downloads/). 
+- You need to install [BSON.jl](https://github.com/JuliaIO/BSON.jl) for loading provided data.
+
 ## Toy Data
 For data you can either: 
 1. download the provided embedding space
 2. create your own random data 
 
 ```julia
+# if BSON not install uncomment the following 2 lines
+# using Pkg
+# Pkg.add("BSON")
+
+using LinearAlgebra
 using BSON: @load
 using Random
 
-# uncomment one of the following of option 1/2 for loading data
+# uncomment one of the following: option 1/2 for loading data
 
 # option 1
 # @load "/path/to/FT_first_30k_sentences.bson" x
