@@ -36,8 +36,7 @@ end
 ## Appendix 2: Alignment Procedure
 ```julia
 function findAlignments(X, Y)
-  # X and Y have equal number of samples
-  # their dimensions can be different 
+  # X and Y have equal number of samples, their dimensions can be different 
   xsim = X’ * X # n by n matrix 
   ysim = Y’ * Y
   sort!(ysim, dims=1) sort!(xsim, dims=1)
