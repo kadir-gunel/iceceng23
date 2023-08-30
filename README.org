@@ -1,5 +1,0 @@
-* iceceng23
-Code samples in the Appendix part of /Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models/ paper
-
-
-
