@@ -7,8 +7,8 @@ Code samples in the Appendix part of *Model Agnostic Knowledge Transfer Methods 
 
 ```julia
 function mapOrthogonal(From, To)
-  U, S, Vt = svd(From * To’) 
-  W = (V * U’)
+  F = svd(From * To’) 
+  W = (F.V * F.U’)
   return W
 end
 
