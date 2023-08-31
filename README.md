@@ -1,5 +1,5 @@
 # iceceng23
-Code samples in the Appendix part of *Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models* paper by *K. Gunel* and *M. Fatih Amasyali*.
+<ins>Code samples for **the Appendix</ins>** part of *"Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models"* paper by *K. Gunel* and *M. Fatih Amasyali*.
 
 - The code given below is written in [Julia](https://julialang.org/downloads/). 
 - You need to install [BSON.jl](https://github.com/JuliaIO/BSON.jl) for loading provided data.
