@@ -1,4 +1,4 @@
-# iceceng23
+# Appendix Code for iceceng23
 <ins>Code samples for **the Appendix</ins>** part of *"Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models"* paper by *K. Gunel* and *M. Fatih Amasyali*.
 
 - The code given below is written in [Julia](https://julialang.org/downloads/). 
