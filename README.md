@@ -9,6 +9,7 @@
 - The shared code can work between different dimensional data :
   - provided data (see WMT Vectors folder)
   - on your data (as long as it is in matrix form)
+- <ins>Be aware that Julia is column major not row major like Python</ins>
 
 
 ## Toy Data
