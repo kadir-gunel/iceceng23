@@ -5,12 +5,12 @@ Repository for *"Model Agnostic Knowledge Transfer Methods for Sentence Embeddin
 
 1. Download [Julia](julia.com)
   - All experiments are done with Julia version 1.8
-2. Install dependent packages
-  - Knet
-  - BSON
-  - JLD2
-  - CUDA
-  - ... 
+2. Install dependent packages. It is better to create separate virtual environments for different minimization methods since each dependent to different packages.
+  - For **Entropy Minimization experiments**
+    - Knet, JLD2, CUDA
+  - For **Distance Minimization experiments**
+    - Flux, BSON, ...
+  
 3. Download data
 4. Execute 
 
