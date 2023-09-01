@@ -19,6 +19,31 @@ Random.seed!(1234)
 
 global atype = Knet.gpu(0) == -1 ? Array : KnetArray
 
+"""
+This reading method is sequential and consumes too much memory.
+"""
+function readEmbeds(file; threshold=0, vocabulary=Nothing, dtype=Float32)
+    @warn "This method reads the word embedding matrix in column major format"
+    count, dims = parse.(Int64, split(readline(file), ' '))
+    words  = String[]; # words in vocabulary
+    matrix = isequal(vocabulary, Nothing) ?  Array{dtype}(undef, count, dims) : Array{Float32}[];
+
+    # p = Progress(dims, 1, "Reading embeddig file: $file") # this is for progressbar
+    for (i, line) in enumerate(drop(eachline(file), 1))
+        mixed = split(chomp(line), " ")
+        if vocabulary == Nothing
+            push!(words, mixed[1])
+            matrix[i, :] .= parse.(dtype, mixed[2:end])
+        elseif in(mixed[1], vocabulary)
+            push!(words, mixed[1])
+            push!(matrix, parse.(dtype, mixed[2:end]))
+        end
+        # next!(p)
+    end
+    words, Matrix(permutedims(matrix))
+end
+
+
 
 # helpers for creating batches
 function crp2int(corpus::Array{String}, s2i::Dict)
@@ -191,7 +216,7 @@ function validate_loss(model, data, sBert; hiddenType=:other)
 end
 
 _, Y = readBinaryEmbeddings("/home/phd/Documents/Conference/sBERT_768_WMT_ALL");
-words, X = readBinaryEmbeddings("/home/phd/Documents/Conference/FT");
+words, X = readEmbeds("/home/phd/Documents/Conference/FT_word_embeddings.txt");
 
 lines = readlines("/home/phd/Documents/europarl-en.lower.txt");
 line_lens = lines .|> split .|> length; # 1965734
