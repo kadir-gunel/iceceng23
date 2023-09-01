@@ -81,16 +81,6 @@ function initModel(hidden, emb_size)
     return model # later add ft emebddings as embedding layer
 end
 
-function initModel2(hidden)
-    model = Dict{Symbol, Any}()
-    params = (:hidden, :z, :r)
-    for param in params
-        model[(Symbol(:W_, param))] = init(2hidden, hidden)
-        model[(Symbol(:b_, param))] = init(1, hidden)
-    end
-    return model # later add ft emebddings as embedding layer
-end
-
 function outputModel(hidden, vocsize)
     model = Dict{Symbol, Any}();
     model[:W] = init(hidden, vocsize)
