@@ -59,6 +59,8 @@ end
 
 Use ```readBinaryEmbeddings``` to load the saved vocabulary file and word vectors.
 ```julia
+using Mmap
+
 function readBinaryEmbeddings(file::String; atype=Float32)
     @info "Reading Word Embedding file"
     s = open(file * "_WE.bin")   # default is read-only
