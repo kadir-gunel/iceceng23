@@ -64,6 +64,7 @@ function dynamicBatch!(corpus64::Array, pad_tag_id::Int64; maxSeqLen::Int64=70, 
     return batches
 end
 
+pickSentences(tot_lines::Int64; k::Int64=Int(64e3)) = (collect(1:tot_lines) |> shuffle)[1:k]
 
 #============== Model Functions =================#
 
@@ -95,12 +96,17 @@ function applyMask(hidden, xt) # x @ time t
     return hidden .* M # hence we clear all paddings states
 end
 
-# in order to use the same GRUCell between all layers need a projection layer for reducing the hidden,input sizes
-project(model, hState, input) = tanh.(hcat(hState, input) * model[:W_project] .+ model[:b_project])
+function getGolds(indeces::Array)
+    Is, Js, Vs = indeces, collect(1:length(indeces)), Array{Int64}(ones(length(indeces)))
+    ygold = permutedims(atype{Float32, 2}(sparse(Is, Js, Vs, vocSize, length(indeces))))
+    return ygold
+end
 
+# Loss functions
 mse(ŷ, y; agg=sum) = agg((ŷ - y) .^ 2)
-
 euclidean(ŷ, y) = sqrt(mse(ŷ, y, agg=sum))
+predictWords(output, hidden) = logsoftmax(hidden * output[:W] .+ output[:b], dims=2)
+
 
 function GRUCell(model, hidden, input)
     x = hcat(hidden, input) # (bsize, 300) + (bsize, 768) = (bsize, 1068)
@@ -114,14 +120,12 @@ end
 
 function encode(model, x, sBERT; hiddenType::Symbol=:sBert)
     sumloss  = 0.
+    tsteps, bsize   = x |> size
+    
     embeds   = model[:embeddings]
     output   = model[:output]
-    tsteps   = size(x, 1)
-    bsize    = size(x, 2)
-    
     hState1 = (hiddenType == :sBert) ? deepcopy(sBERT) : initstate(bsize, hidden)
     
-
     for t in 1:tsteps
         input = embeds[x[t, :],:]
         hState1 = GRUCell(model[:L1], hState1, input)
@@ -133,16 +137,14 @@ function encode(model, x, sBERT; hiddenType::Symbol=:sBert)
         calculate the euclidean distance between hidden state and the sBert sentence vector
     =#
     return euclidean(hState1, sBERT) 
-    
 end
 
 function decode(model, x, sBERT; hiddenType::Symbol=:sBert)
     sumloss  = 0.
+    tsteps, bsize   = x |> size
+    
     embeds   = model[:embeddings]
     output   = model[:output]
-    tsteps   = size(x, 1)
-    bsize    = size(x, 2)
-    
     hState1 = (hiddenType == :sBert) ? deepcopy(sBERT) : initstate(bsize, hidden)
 
     for t in 1:(tsteps - 1)
@@ -155,13 +157,6 @@ function decode(model, x, sBERT; hiddenType::Symbol=:sBert)
     return -sumloss
 end
 
-predictWords(output, hidden) = logsoftmax(hidden * output[:W] .+ output[:b], dims=2)
-
-function getGolds(indeces::Array)
-    Is, Js, Vs = indeces, collect(1:length(indeces)), Array{Int64}(ones(length(indeces)))
-    ygold = permutedims(atype{Float32, 2}(sparse(Is, Js, Vs, vocSize, length(indeces))))
-    return ygold
-end
 
 euclideanGrads = gradloss(encode);
 gradients = gradloss(decode);
@@ -171,13 +166,13 @@ function train(model, data_trn, sBert; hiddenType=:sBert)
     opts = optimizers(model, optim, lr=lrate)
     for (x, y) in zip(data_trn, sBert)
         x = reduce(hcat, x)
+        # first for xe loss
         grads, loss = gradients(model, x, KnetArray(y); hiddenType=hiddenType)
         update!(model, grads, opts)
-        
+        # second for euclidean loss - keep in mind that parameters of the model are same.
         euc_grads, e_loss = euclideanGrads(model, x, KnetArray(y); hiddenType=:sBert)
         update!(model, euc_grads, opts)
         euc_loss += e_loss
-        
         totloss += loss
         examples += length(x)
     end
@@ -196,7 +191,6 @@ function validate_loss(model, data, sBert; hiddenType=:other)
 end
 
 _, Y = readBinaryEmbeddings("/home/phd/Documents/Conference/sBERT_768_WMT_ALL");
-
 words, X = readBinaryEmbeddings("/home/phd/Documents/Conference/FT");
 
 lines = readlines("/home/phd/Documents/europarl-en.lower.txt");
@@ -207,6 +201,7 @@ idx = pickSentences(length(lines), k=300_000);
 
 sBert = deepcopy(Y[idx, :]);
 
+# too much data let's dump it.
 Y = nothing
 GC.gc();
 
@@ -283,6 +278,8 @@ valid_loader = (batches[ids[1+trn:end]], sBert[ids[1+trn:end]]);
 
 valid_xloss, val_euc = validate_loss(model, valid_loader[1], valid_loader[2]; hiddenType=:sBert)
 
+@printf "Initial Validation Loss: \n"
+@printf "XE: %.4f, EUC: %.4f, Perplexity: %.4f \n" val_xloss val_euc exp(val_xloss)
 
 function my_train!(model, train_loader, valid_loader)
     for epoch in 1:epochs
