@@ -57,7 +57,7 @@ function writeBinaryEmbeddings(file::String, WE::Matrix, V::Array{String})
 end
 ```
 
-Use this method to load the saved vocabulary file and word vectors.
+Use ```readBinaryEmbeddings``` to load the saved vocabulary file and word vectors.
 ```julia
 function readBinaryEmbeddings(file::String; atype=Float32)
     @info "Reading Word Embedding file"
