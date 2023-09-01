@@ -301,11 +301,6 @@ train_loader = (batches[ids[1:trn]], sBert[ids[1:trn]])
 valid_loader = (batches[ids[1+trn:end]], sBert[ids[1+trn:end]]);
 
 
-valid_xloss, val_euc = validate_loss(model, valid_loader[1], valid_loader[2]; hiddenType=:sBert)
-
-@printf "Initial Validation Loss: \n"
-@printf "XE: %.4f, EUC: %.4f, Perplexity: %.4f \n" val_xloss val_euc exp(val_xloss)
-
 function my_train!(model, train_loader, valid_loader)
     for epoch in 1:epochs
         trn_xloss, trn_euc = train(model, train_loader[1], train_loader[2],  hiddenType=:sBert)
