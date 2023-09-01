@@ -4,6 +4,12 @@ Repository for *"Model Agnostic Knowledge Transfer Methods for Sentence Embeddin
 ## Data Loading for FastText Embeddings
 Loading pre-trained FastText models (especially English) takes too much time and space. Since there is no native way of loading them in Julia, I found a 2-step way: First you load the data by using ```readEmbeds``` function. This function returns a vocabulary and a matrix (word vectors). The second step is to write it in binary format and use ```Mmap``` utility for later usages. This is a one time thing but it saves tons of time and space. 
 
+```readEmbeds``` function requires to have vocabulary and dimension size of the intended FastText model. 
+To do so: 
+1. Open ft-model.txt with an text editor (use nano since it gives you the number of lines(vocabulary) automatically)
+2. Insert ```voc_size dim_size``` at top line
+3. Save and exit
+
 
 ```julia
 function readEmbeds(file; threshold=0, vocabulary=Nothing, dtype=Float32)
