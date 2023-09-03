@@ -1,6 +1,19 @@
 # iceceng23
 Repository for *"Model Agnostic Knowledge Transfer Methods for Sentence Embedding Models*" paper by *Gunel* and *Amasyali*.
 
+## How to repeat the experiments 
+
+1. Download [Julia](julia.com)
+  - All experiments are done with Julia version 1.8
+2. Install dependent packages. It is better to create separate virtual environments for different minimization methods since each dependent to different packages.
+  - For **Entropy Minimization experiments**
+    - Knet, JLD2, CUDA
+  - For **Distance Minimization experiments**
+    - Flux, BSON, ...
+  
+3. Download data
+4. Execute 
+
 ## Data Loading for FastText Embeddings
 Loading pre-trained FastText models (especially English - 2M by 300 vectors!!) takes too much time and space. Since there is no native way of loading them in Julia, I found a 2-step way: First you load the data by using ```readEmbeds``` function. This function returns a vocabulary and a matrix (word vectors). The second step is to write it in binary format and use ```Mmap``` utility for later usages. This is a one time thing but it saves tons of time and space. 
 
