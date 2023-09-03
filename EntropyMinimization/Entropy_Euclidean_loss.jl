@@ -215,9 +215,13 @@ function validate_loss(model, data, sBert; hiddenType=:other)
     return (totloss / examples, euc_loss / length(data))
 end
 
-_, Y = readBinaryEmbeddings("/home/phd/Documents/Conference/sBERT_768_WMT_ALL");
+@info "Reading sBert Sentence Embeddings of WMT dataset"
+_, Y =
+    readBinaryEmbeddings("/home/phd/Documents/Conference/sBERT_768_WMT_ALL");
+@info "Reading FT Embedding File"
 words, X = readEmbeds("/home/phd/Documents/Conference/FT_word_embeddings.txt");
 
+@info "Reading WMT dataset"
 lines = readlines("/home/phd/Documents/europarl-en.lower.txt");
 line_lens = lines .|> split .|> length; # 1965734
 linesGTWords = findall(x -> x > 10, line_lens); # returns indices of longer than 10
@@ -261,6 +265,7 @@ end
 
 
 global bsize = 128
+
 pad_tag_id = s2i[word_idx[end]] # padding id
 @time batches = dynamicBatch!(corpus64_2, pad_tag_id, bsize=bsize);
 
